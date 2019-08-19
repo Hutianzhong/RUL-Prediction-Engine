@@ -80,13 +80,13 @@ for group in range(Groups_num):
 # get batch_data
 batch_x = []
 batch_y = []
-# for group in train_feature:
-#     for t in range(group.shape[0]):
-#         batch_x.append(group[t])
-
 for group in train_feature:
-    for t in range(group.shape[0] - win_length):
-        batch_x.append(group[t:t+win_length])
+    for t in range(group.shape[0]):
+        batch_x.append(group[t])
+
+# for group in train_feature:
+#     for t in range(group.shape[0] - win_length):
+#         batch_x.append(group[t:t+win_length])
 
 for group in train_target:
     for t in range(win_length, group.shape[0]):
@@ -112,30 +112,31 @@ sDAE.add(Dense(4, activation='relu'))
 sDAE.add(Dense(1, activation='sigmoid'))
 sDAE.compile(optimizer='sgd', loss='mean_squared_error')
 
-# train sDAE model
-# history = sDAE.fit(batch_x, batch_y, batch_size=100, epochs=100)
-# sDAE.save_weights('sDAE_weight.h5')
+train sDAE model
+history = sDAE.fit(batch_x, batch_y, batch_size=100, epochs=100)
+sDAE.save_weights('sDAE_weight.h5')
 
 # train sDAE_LSTM model
 # history = sDAE_LSTM.fit(batch_x, batch_y, batch_size=100, epochs=100)
 # sDAE_LSTM.save_weights('sDAE_LSTM_weight.h5')
 
-# read weight of saved model
-sDAE_LSTM.load_weights('sDAE_LSTM_weight.h5')
-sDAE.load_weights('sDAE_weight.h5')
+# # read weight of saved model
+# sDAE_LSTM.load_weights('sDAE_LSTM_weight.h5')
+# sDAE.load_weights('sDAE_weight.h5')
 
 # predict
 exp_no = 1
 test_x = train_feature[exp_no]
+pre_data = sDAE.predict(test_x)
 
-pre_data = np.zeros(shape=(test_x.shape[0], 1))
-pre_data[:win_length] = sDAE.predict(test_x[:win_length])
+# pre_data = np.zeros(shape=(test_x.shape[0], 1))
+# pre_data[:win_length] = sDAE.predict(test_x[:win_length])
 
-temp_x = []
-for t in range(test_x.shape[0] - win_length):
-    temp_x.append(test_x[t:t+win_length])
-temp_x = np.array(temp_x)
-pre_data[win_length:] = sDAE_LSTM.predict(temp_x)
+# temp_x = []
+# for t in range(test_x.shape[0] - win_length):
+#     temp_x.append(test_x[t:t+win_length])
+# temp_x = np.array(temp_x)
+# pre_data[win_length:] = sDAE_LSTM.predict(temp_x)
 
 # show in fig
 plt.title('Index')
