@@ -1,6 +1,6 @@
 # RUL-Prediction-WindTurbine
-# State assessment
+## State assessment
 1. Unsupervised learning：Encoding and Decoding by Double-Layer LSTM
 2. Supervised learning：DBN
-# Prediction：
+## Prediction：
 Attention model by LSTM
